@@ -2,5 +2,5 @@
 
 Simple quiz educational app
 
-Contact
+Contact [Colin Stodd](https://colinstodd.com/contact)
 
