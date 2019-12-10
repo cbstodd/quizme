@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quizme/quiz_brain.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 QuizBrain quizBrain = QuizBrain();
 
@@ -29,36 +30,59 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreKeeper = [];
-  int questionIndex = 0;
 
-  void updateQuestionNumber() {
-    if (questionIndex < quizBrain.getQuestionBankLength()) {
-      questionIndex += 1;
-    } else {
-      quizBrain.setNewQuestion(0, "All Questions answered!", true);
-      print("Index: 0, Text: All Questions answered!, BoolAnswer: true");
-      questionIndex = 0;
-    }
+  void showAlertModal() {
+    Alert(
+      context: context,
+      type: AlertType.info,
+      title: "Congratulations!!!",
+      desc: "Quiz is completed!",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Start Over",
+            style: TextStyle(
+              color: Colors.white70,
+              fontSize: 20,
+            ),
+          ),
+          onPressed: () => Navigator.pop(context),
+          width: 120,
+          color: Colors.blueAccent,
+        )
+      ],
+    ).show();
+  }
+
+  void startOver() {
+    setState(() {
+      showAlertModal();
+      quizBrain.resetQuiz();
+      scoreKeeper = [];
+    });
   }
 
   void checkAnswer(bool checkedAnswerVal) {
-    bool correctAnswer = quizBrain.getQuestionAnswer(questionIndex);
-    if (correctAnswer == checkedAnswerVal) {
+    bool correctAnswer = quizBrain.getQuestionAnswer();
+    if (correctAnswer == checkedAnswerVal && quizBrain.hasRemainingQuestions()) {
       // Correct Answer actions:
       setState(() {
         scoreKeeper.add(
           Icon(Icons.check, color: Colors.lightGreen),
         );
-        updateQuestionNumber();
+        quizBrain.updateQuestionNumber();
       });
-    } else {
+    } else if (correctAnswer != checkedAnswerVal && quizBrain.hasRemainingQuestions()) {
       // Incorrect answer actions:
       setState(() {
         scoreKeeper.add(
           Icon(Icons.close, color: Colors.redAccent),
         );
-        updateQuestionNumber();
+        quizBrain.updateQuestionNumber();
       });
+      // Show alert modal and reset quiz index:
+    } else {
+      startOver();
     }
   }
 
@@ -74,7 +98,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                quizBrain.getQuestionText(questionIndex),
+                quizBrain.getQuestionText(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -130,19 +154,38 @@ class _QuizPageState extends State<QuizPage> {
           child: Padding(
             padding: EdgeInsets.all(15.0),
             child: FlatButton(
-              color: Colors.orangeAccent,
+              color: Colors.blueAccent,
               child: Text(
-                'Clear',
+                'Go Back',
                 style: TextStyle(
                   fontSize: 20.0,
                   color: Colors.white,
                 ),
               ),
               onPressed: () {
-                //The user picked false.
                 setState(() {
-                  scoreKeeper.clear();
+                  quizBrain.goBack();
+                  scoreKeeper.removeLast();
                 });
+              },
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: Padding(
+            padding: EdgeInsets.all(15.0),
+            child: FlatButton(
+              color: Colors.orangeAccent,
+              child: Text(
+                'Start Over',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.white,
+                ),
+              ),
+              onPressed: () {
+                startOver();
               },
             ),
           ),

@@ -1,4 +1,7 @@
 import 'package:quizme/question.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+
+int _questionIndex = 0;
 
 class QuizBrain {
   List<Question> _questionBank = [
@@ -18,12 +21,12 @@ class QuizBrain {
     Question("Apple is a computer company", true),
   ];
 
-  String getQuestionText(int questionIndex) {
-    return _questionBank[questionIndex].questionText;
+  String getQuestionText() {
+    return _questionBank[_questionIndex].questionText;
   }
 
-  bool getQuestionAnswer(int questionIndex) {
-    return _questionBank[questionIndex].questionAnswer;
+  bool getQuestionAnswer() {
+    return _questionBank[_questionIndex].questionAnswer;
   }
 
   int getQuestionBankLength() {
@@ -32,5 +35,30 @@ class QuizBrain {
 
   void setNewQuestion(int index, String text, bool answer) {
     _questionBank.insert(index, Question("$text", answer));
+  }
+
+  void resetQuiz() {
+    _questionIndex = 0;
+  }
+
+  void goBack() {
+    _questionIndex -= 1;
+  }
+
+  bool hasRemainingQuestions() {
+    if (_questionIndex < getQuestionBankLength()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void updateQuestionNumber() {
+    if (_questionIndex < getQuestionBankLength()) {
+      _questionIndex += 1;
+    } else {
+      setNewQuestion(0, "All Questions answered!", true);
+      _questionIndex = 0;
+    }
   }
 }
