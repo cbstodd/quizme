@@ -57,7 +57,7 @@ class _QuizPageState extends State<QuizPage> {
   void startOver() {
     setState(() {
       showAlertModal();
-      quizBrain.resetQuiz();
+      quizBrain.resetQuizIndex();
       scoreKeeper = [];
     });
   }

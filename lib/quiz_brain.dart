@@ -1,5 +1,4 @@
 import 'package:quizme/question.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 
 int _questionIndex = 0;
 
@@ -37,7 +36,7 @@ class QuizBrain {
     _questionBank.insert(index, Question("$text", answer));
   }
 
-  void resetQuiz() {
+  void resetQuizIndex() {
     _questionIndex = 0;
   }
 
