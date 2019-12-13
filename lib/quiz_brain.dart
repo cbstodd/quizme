@@ -31,11 +31,7 @@ class QuizBrain {
   int getQuestionBankLength() {
     return _questionBank.length - 1;
   }
-
-  void setNewQuestion(int index, String text, bool answer) {
-    _questionBank.insert(index, Question("$text", answer));
-  }
-
+  
   void resetQuizIndex() {
     _questionIndex = 0;
   }
@@ -56,7 +52,6 @@ class QuizBrain {
     if (_questionIndex < getQuestionBankLength()) {
       _questionIndex += 1;
     } else {
-      setNewQuestion(0, "All Questions answered!", true);
       _questionIndex = 0;
     }
   }

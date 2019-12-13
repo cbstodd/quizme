@@ -35,8 +35,8 @@ class _QuizPageState extends State<QuizPage> {
     Alert(
       context: context,
       type: AlertType.info,
-      title: "Congratulations!!!",
-      desc: "Quiz is completed!",
+      title: "Start Over?",
+      desc: "You can start over by clicking the button below",
       buttons: [
         DialogButton(
           child: Text(
